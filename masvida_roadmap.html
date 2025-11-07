@@ -707,17 +707,21 @@ function loadEstados() {
 }
 
 function saveEstados() {
-  try {
-    localStorage.setItem(ESTADOS_KEY, JSON.stringify(estados));
-    actualizarSelectEstados();
-    actualizarEstilosEstados();
-    actualizarLeyenda();
-    saveAll();
-  } catch (e) {
-    console.error("Error saving estados:", e);
-    alert("Error al guardar los estados");
-  }
+  localStorage.setItem("estados", JSON.stringify(estados));
+
+  fetch('/save_states', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(estados)
+  }).then(r => r.json()).then(resp => {
+    if(resp.status === "ok") {
+      console.log("✅ Estados guardados en el servidor");
+    } else {
+      alert("⚠ Error al guardar los estados");
+    }
+  });
 }
+
 
 function getDefaultMeses() {
   return [

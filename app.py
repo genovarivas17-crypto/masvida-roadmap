@@ -68,6 +68,15 @@ def save_views():
     save_data(data)
     return jsonify({"status": "ok"})
 
+@app.route("/save_states", methods=["POST"])
+def save_states():
+    content = request.get_json()
+
+    data = load_data()
+    data["estados"] = content  # guardamos solo los estados dentro del json
+    save_data(data)
+
+    return jsonify({"status": "ok"})
 
 # ------------------------------------
 
