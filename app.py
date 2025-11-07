@@ -7,7 +7,7 @@ app = Flask(__name__)
 
 DATA_FILE = "roadmap_data.json"
 SHEETS_ID = "1y2jRf9G6WzHWDCoER7gjrEKL4LoepRuHdk5fsctzgNo"
-ESTADOS_SHEET_NAME = "Estados"
+ESTADOS_SHEET_NAME = "Estados"  # Nombre de la hoja de estados
 
 SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
 
@@ -18,15 +18,15 @@ CREDS = Credentials.from_service_account_info(SERVICE_ACCOUNT_INFO, scopes=SCOPE
 client = gspread.authorize(CREDS)
 spreadsheet = client.open_by_key(SHEETS_ID)
 
-# Configurar hojas
-sheet = spreadsheet.get_worksheet(0)  # Hoja principal para el roadmap
-
 # Obtener o crear la hoja de Estados
 try:
     estados_sheet = spreadsheet.worksheet(ESTADOS_SHEET_NAME)
 except gspread.WorksheetNotFound:
     estados_sheet = spreadsheet.add_worksheet(ESTADOS_SHEET_NAME, 1000, 3)
     estados_sheet.append_row(['id', 'nombre', 'color'])
+
+# Usar la primera hoja como hoja principal
+sheet = spreadsheet.get_worksheet(0)
 
 
 
@@ -37,6 +37,7 @@ def load_states_from_sheets():
         estados_data = estados_sheet.get_all_records()
         estados = []
         for estado in estados_data:
+            # Verificar que todas las columnas necesarias estén presentes
             if all(key in estado for key in ['id', 'nombre', 'color']):
                 estados.append({
                     'id': estado['id'],
@@ -50,7 +51,7 @@ def load_states_from_sheets():
 
 def save_states_to_sheets(estados):
     try:
-        # Preparar los datos para la actualización
+        # Preparar los datos antes de la actualización
         rows = [['id', 'nombre', 'color']]  # Encabezados
         for estado in estados:
             if all(key in estado for key in ['id', 'nombre', 'color']):
@@ -60,7 +61,7 @@ def save_states_to_sheets(estados):
                     estado['color']
                 ])
         
-        # Actualizar la hoja de estados
+        # Actualizar toda la hoja de una vez
         estados_sheet.clear()
         if len(rows) > 1:  # Si hay datos además de los encabezados
             estados_sheet.update(rows)
@@ -74,15 +75,18 @@ def load_data():
         # Cargar datos del roadmap
         roadmap_data = sheet.get_all_records()
         data_list = []
+        
+        # Convertir los datos del roadmap al formato esperado
         for item in roadmap_data:
-            if all(key in item for key in ["Módulo", "Sprint", "Duración"]):
+            if "Módulo" in item and "Sprint" in item and "Duración" in item:
                 data_list.append({
                     "modulo": item["Módulo"],
                     "sprint": item["Sprint"],
-                    "duracion": item["Duración"]
+                    "duracion": item["Duración"],
+                    "estado": item.get("estado", "")  # Campo opcional
                 })
         
-        # Cargar estados desde la hoja Estados
+        # Cargar estados
         estados = load_states_from_sheets()
         
         data = {
@@ -99,6 +103,7 @@ def load_data():
         return data
     except Exception as e:
         print(f"Error loading data: {e}")
+        # Si hay error, intentar cargar desde archivo local
         if os.path.exists(DATA_FILE):
             with open(DATA_FILE, "r", encoding="utf-8") as f:
                 return json.load(f)
@@ -109,7 +114,7 @@ def save_data(content):
     with open(DATA_FILE, "w", encoding="utf-8") as f:
         json.dump(content, f, indent=4, ensure_ascii=False)
 
-    # Guardar roadmap en la hoja principal
+    # Guardar roadmap en Google Sheets
     sheet.clear()
     rows = [["Módulo", "Sprint", "Duración"]]
     for item in content["data"]:
@@ -152,25 +157,21 @@ def save_views():
 
 @app.route("/save_states", methods=["POST"])
 def save_states():
-    try:
-        estados = request.get_json()
-        
-        # Guardar estados en Google Sheets
-        if save_states_to_sheets(estados):
-            # Si se guardó correctamente en Sheets, actualizar archivo local
-            data = load_data()
-            data["estados"] = estados
-            with open(DATA_FILE, "w", encoding="utf-8") as f:
-                json.dump(data, f, indent=4, ensure_ascii=False)
-            
-            return jsonify({"status": "ok"})
-        else:
-            return jsonify({"status": "error", "message": "Error saving states to Google Sheets"}), 500
-            
-    except Exception as e:
-        return jsonify({"status": "error", "message": str(e)}), 500
+    estados = request.get_json()
+    
+    # Guardar en archivo local
+    data = load_data()
+    data["estados"] = estados
+    with open(DATA_FILE, "w", encoding="utf-8") as f:
+        json.dump(data, f, indent=4, ensure_ascii=False)
+    
+    # Guardar en Google Sheets
+    save_states_to_sheets(estados)
+    
+    return jsonify({"status": "ok"})
 
 # ------------------------------------
 
 if __name__ == "__main__":
     app.run(debug=True)
+
