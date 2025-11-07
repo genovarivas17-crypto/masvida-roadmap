@@ -1672,20 +1672,29 @@ function saveAll() {
     .catch(() => alert("⚠️ Error al guardar en servidor"));
 }
 
-function loadAll() {
-    fetch('/load')
-        .then(r => r.json())
-        .then(d => {
-            if (!d) return;
-            data = d.data || [];
-            estados = d.estados || [];
-            meses = d.meses || [];
-            cantidadSprints = d.cantidadSprints || cantidadSprints;
-            renderGantt();
-        });
+async function loadAll() {
+   try {
+      const resp = await fetch("/load");
+      const serverData = await resp.json();
+
+      data = serverData.data || [];
+      estados = serverData.estados || [];
+      meses = serverData.meses || [];
+
+      // Guardar copia también en localStorage para acelerar carga
+      localStorage.setItem("data", JSON.stringify(data));
+      localStorage.setItem("estados", JSON.stringify(estados));
+      localStorage.setItem("meses", JSON.stringify(meses));
+
+      renderGantt();
+   } catch (err) {
+      console.error("Error cargando desde servidor:", err);
+      renderGantt(); // fallback
+   }
 }
 
 loadAll();
+
 
 </script>
 </body>
