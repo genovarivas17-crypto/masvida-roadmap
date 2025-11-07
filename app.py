@@ -54,6 +54,21 @@ def save():
     save_data(content)
     return jsonify({"status": "ok"})
 
+@app.route("/vistas", methods=["GET"])
+def get_views():
+    data = load_data()
+    return jsonify(data.get("vistas", []))
+
+
+@app.route("/vistas", methods=["POST"])
+def save_views():
+    data = load_data()
+    new_views = request.get_json()
+    data["vistas"] = new_views
+    save_data(data)
+    return jsonify({"status": "ok"})
+
+
 # ------------------------------------
 
 if __name__ == "__main__":
