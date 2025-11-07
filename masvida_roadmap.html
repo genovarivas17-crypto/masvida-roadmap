@@ -1232,7 +1232,7 @@ function renderEstadosConfig() {
 async function actualizarEstadoNombre(index, nuevoNombre) {
   if (nuevoNombre.trim()) {
     estados[index].nombre = nuevoNombre.trim();
-    await guardarEstados();
+    await saveToServer();
     actualizarSelectEstados();
     actualizarEstilosEstados();
     actualizarLeyenda();
@@ -1243,36 +1243,12 @@ async function actualizarEstadoNombre(index, nuevoNombre) {
 
 async function actualizarEstadoColor(index, nuevoColor) {
   estados[index].color = nuevoColor;
-  await guardarEstados();
+  await saveToServer();
   actualizarSelectEstados();
   actualizarEstilosEstados();
   actualizarLeyenda();
   renderEstadosConfig();
   renderGantt();
-}
-
-// Nueva función para guardar estados
-async function guardarEstados() {
-  try {
-    // Primero guardamos en la hoja de estados
-    const responseStates = await fetch('/save_states', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(estados)
-    });
-
-    if (!responseStates.ok) throw new Error('Error al guardar estados');
-
-    // Luego guardamos en el servidor principal
-    await saveToServer();
-    return true;
-  } catch (error) {
-    console.error('Error saving states:', error);
-    alert('Error al guardar los estados. Por favor, intenta de nuevo.');
-    return false;
-  }
 }
 
 async function eliminarEstado(index) {
@@ -1315,28 +1291,11 @@ async function agregarNuevoEstado() {
       color: '#' + Math.floor(Math.random()*16777215).toString(16)
     };
     estados.push(nuevoEstado);
-
-    // Guardar estados en la hoja de Google Sheets
-    try {
-      const response = await fetch('/save_states', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(estados)
-      });
-
-      if (!response.ok) throw new Error('Error al guardar estados');
-
-      await saveToServer();
-      actualizarSelectEstados();
-      actualizarEstilosEstados();
-      actualizarLeyenda();
-      renderEstadosConfig();
-    } catch (error) {
-      console.error('Error saving states:', error);
-      alert('Error al guardar el estado. Por favor, intenta de nuevo.');
-    }
+    await saveToServer();
+    actualizarSelectEstados();
+    actualizarEstilosEstados();
+    actualizarLeyenda();
+    renderEstadosConfig();
   }
 }
 
