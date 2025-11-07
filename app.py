@@ -9,9 +9,11 @@ DATA_FILE = "roadmap_data.json"
 SHEETS_ID = "1y2jRf9G6WzHWDCoER7gjrEKL4LoepRuHdk5fsctzgNo"
 
 SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
-CREDS = Credentials.from_service_account_file("jovial-style-450914-d7-d9d7e3b2c3c0.json", scopes=SCOPES)
+SERVICE_ACCOUNT_INFO = json.loads(os.environ["GOOGLE_CREDENTIALS"])
+CREDS = Credentials.from_service_account_info(SERVICE_ACCOUNT_INFO, scopes=SCOPES)
 client = gspread.authorize(CREDS)
 sheet = client.open_by_key(SHEETS_ID).sheet1
+
 
 # ------------------------------------
 
