@@ -9,10 +9,14 @@ DATA_FILE = "roadmap_data.json"
 SHEETS_ID = "1y2jRf9G6WzHWDCoER7gjrEKL4LoepRuHdk5fsctzgNo"
 
 SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
+
+# Cargar credenciales desde variable de entorno (Render)
 SERVICE_ACCOUNT_INFO = json.loads(os.environ["GOOGLE_CREDENTIALS"])
 CREDS = Credentials.from_service_account_info(SERVICE_ACCOUNT_INFO, scopes=SCOPES)
+
 client = gspread.authorize(CREDS)
 sheet = client.open_by_key(SHEETS_ID).sheet1
+
 
 
 # ------------------------------------
