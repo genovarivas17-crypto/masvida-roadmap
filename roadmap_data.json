@@ -1,0 +1,19 @@
+{
+    "data": [
+        {
+            "modulo": "Genova",
+            "sprint": 1,
+            "duracion": 1,
+            "estado": "estado-1762529112623"
+        }
+    ],
+    "estados": [
+        {
+            "id": "estado-1762529112623",
+            "nombre": "Pendiente",
+            "color": "#942bf3"
+        }
+    ],
+    "meses": [],
+    "cantidadSprints": 16
+}

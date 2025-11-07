@@ -1,0 +1,311 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Tablero Kanban — Demo</title>
+  <style>
+    :root{--bg:#0f1724;--card:#ffffff;--muted:#6b7280;--accent:#0ea5a4;--col-bg:#0b1220}
+    *{box-sizing:border-box}
+    body{font-family:Inter,system-ui,Segoe UI,Roboto,Helvetica,Arial; margin:0; min-height:100vh; background:linear-gradient(180deg,#081021 0%, #06101a 100%); color:#e6eef6}
+    header{display:flex;gap:16px;align-items:center;justify-content:space-between;padding:18px 24px;border-bottom:1px solid rgba(255,255,255,0.03)}
+    header h1{font-size:18px;margin:0}
+    .actions{display:flex;gap:10px;align-items:center}
+    .btn{background:var(--accent);border:none;padding:10px 14px;border-radius:10px;color:#012;cursor:pointer;font-weight:600}
+    .btn.ghost{background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--muted);font-weight:600}
+    .board{display:flex;gap:16px;padding:20px;overflow:auto;height:calc(100vh - 100px)}
+    .column{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border-radius:12px;padding:12px;min-width:280px;flex:0 0 320px;display:flex;flex-direction:column;max-height:100%}
+    .column h2{font-size:14px;margin:0 0 8px;display:flex;justify-content:space-between;align-items:center}
+    .count{background:rgba(0,0,0,0.25);padding:6px 8px;border-radius:999px;font-size:12px;color:var(--muted)}
+    .dropzone{flex:1;overflow:auto;padding:6px;display:flex;flex-direction:column;gap:8px}
+
+    .card{background:var(--card);color:#06202a;border-radius:8px;padding:10px;box-shadow:0 6px 18px rgba(2,6,23,0.5);cursor:grab}
+    .card.dragging{opacity:0.5}
+    .card h3{margin:0;font-size:13px}
+    .meta{font-size:12px;color:var(--muted);margin-top:8px;display:flex;justify-content:space-between;align-items:center}
+    .badge{font-size:11px;padding:4px 6px;border-radius:8px;background:rgba(0,0,0,0.04)}
+
+    .filters{display:flex;gap:8px;align-items:center}
+    select,input[type=search]{padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:inherit}
+
+    /* modal */
+    .modal-backdrop{position:fixed;inset:0;background:rgba(2,6,23,0.6);display:none;align-items:center;justify-content:center;padding:20px}
+    .modal{background:#fff;padding:18px;border-radius:12px;color:#052129;min-width:320px;max-width:720px;width:100%}
+    .modal h2{margin:0 0 12px}
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    label{font-size:13px;color:#234;display:block;margin-bottom:6px}
+    input,textarea,select{width:100%;padding:8px;border-radius:8px;border:1px solid rgba(2,6,23,0.08)}
+    textarea{min-height:90px}
+    .modal-footer{display:flex;gap:8px;justify-content:flex-end;margin-top:12px}
+    .small{font-size:12px;color:var(--muted)}
+
+    /* responsive */
+    @media (max-width:900px){.board{padding:12px}.column{min-width:260px}}
+  </style>
+</head>
+<body>
+  <header>
+    <div>
+      <h1>Tablero Kanban — Demo</h1>
+      <div class="small">Tipos: Incidencia | Historia | Tarea | Bug</div>
+    </div>
+    <div class="actions">
+      <div class="filters">
+        <select id="filterType"><option value="all">Filtrar: Todos los tipos</option><option value="Incidencia">Incidencia</option><option value="Historia">Historia</option><option value="Tarea">Tarea</option><option value="Bug">Bug</option></select>
+        <input id="search" type="search" placeholder="Buscar título..." />
+      </div>
+      <button class="btn" id="btnNew">Crear incidencia</button>
+      <button class="btn ghost" id="btnReset">Reset demo</button>
+    </div>
+  </header>
+
+  <main>
+    <section class="board" id="board">
+      <!-- columns will be injected -->
+    </section>
+  </main>
+
+  <!-- Modal -->
+  <div class="modal-backdrop" id="modal">
+    <div class="modal" role="dialog" aria-modal="true">
+      <h2 id="modalTitle">Crear incidencia</h2>
+      <form id="issueForm">
+        <div class="grid">
+          <div>
+            <label for="type">Tipo</label>
+            <select id="type" required>
+              <option value="Incidencia">Incidencia</option>
+              <option value="Historia">Historia</option>
+              <option value="Tarea">Tarea</option>
+              <option value="Bug">Bug</option>
+            </select>
+          </div>
+          <div>
+            <label for="status">Columna</label>
+            <select id="status">
+              <option value="por hacer">Por hacer</option>
+              <option value="bloqueado">Bloqueado</option>
+              <option value="en curso">En curso</option>
+              <option value="desarrollado">Desarrollado</option>
+              <option value="listo">Listo</option>
+            </select>
+          </div>
+        </div>
+        <div style="margin-top:10px">
+          <label for="title">Título</label>
+          <input id="title" required maxlength="120" placeholder="Resumen breve" />
+        </div>
+        <div style="margin-top:10px">
+          <label for="desc">Descripción</label>
+          <textarea id="desc" placeholder="Descripción detallada (opcional)"></textarea>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn ghost" id="btnCancel">Cancelar</button>
+          <button type="submit" class="btn" id="btnSave">Guardar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    /* ======= Data model & persistence ======= */
+    const STORAGE_KEY = 'kanban_demo_v1';
+    const columns = ['por hacer','bloqueado','en curso','desarrollado','listo'];
+
+    const sample = [
+      {id: genId(),type:'Historia',title:'Login de usuarios',desc:'Historia: permitir login con SSO',status:'por hacer'},
+      {id: genId(),type:'Tarea',title:'Configurar VPS',desc:'Preparar entorno de producción',status:'en curso'},
+      {id: genId(),type:'Bug',title:'Error export PDF',desc:'Falla en la librería de generación',status:'bloqueado'},
+      {id: genId(),type:'Incidencia',title:'Reporte de Caída',desc:'Cliente reporta caída del servicio',status:'desarrollado'}
+    ];
+
+    function genId(){return 'i_'+Math.random().toString(36).slice(2,9)}
+
+    function load(){
+      try{
+        const raw = localStorage.getItem(STORAGE_KEY);
+        return raw ? JSON.parse(raw) : sample;
+      }catch(e){console.error(e);return sample}
+    }
+    function save(data){localStorage.setItem(STORAGE_KEY,JSON.stringify(data))}
+
+    let items = load();
+
+    /* ======= UI rendering ======= */
+    const board = document.getElementById('board');
+    const filterType = document.getElementById('filterType');
+    const search = document.getElementById('search');
+
+    function render(){
+      board.innerHTML = '';
+      const ft = filterType.value;
+      const q = search.value.trim().toLowerCase();
+
+      columns.forEach(col => {
+        const colWrap = document.createElement('section');
+        colWrap.className = 'column';
+        const title = document.createElement('h2');
+        const human = cap(col);
+        title.innerHTML = `<span>${human}</span><span class="count" id="count-${col}"></span>`;
+        colWrap.appendChild(title);
+
+        const drop = document.createElement('div');
+        drop.className = 'dropzone';
+        drop.dataset.status = col;
+
+        // allow drop
+        drop.addEventListener('dragover',e=>{e.preventDefault();drop.style.outline='2px dashed rgba(255,255,255,0.06)'});
+        drop.addEventListener('dragleave',e=>{drop.style.outline='none'});
+        drop.addEventListener('drop',onDrop);
+
+        const list = items.filter(it => it.status === col)
+                          .filter(it => ft==='all' || it.type===ft)
+                          .filter(it => q==='' || it.title.toLowerCase().includes(q))
+                          .sort((a,b)=>a.title.localeCompare(b.title));
+
+        list.forEach(it => {
+          const el = document.createElement('article');
+          el.className = 'card';
+          el.draggable = true;
+          el.dataset.id = it.id;
+
+          el.innerHTML = `
+            <h3>${escapeHtml(it.title)}</h3>
+            <div class="meta"><span class="badge">${it.type}</span><span class="small">${it.id.slice(-4)}</span></div>
+          `;
+
+          el.addEventListener('dragstart',onDragStart);
+          el.addEventListener('dragend',onDragEnd);
+          el.addEventListener('dblclick',()=>openEdit(it.id));
+
+          // context menu actions (edit / delete)
+          el.addEventListener('contextmenu',e=>{
+            e.preventDefault();openMenu(e.pageX,e.pageY,it.id);
+          });
+
+          drop.appendChild(el);
+        });
+
+        const count = list.length;
+        colWrap.appendChild(drop);
+        board.appendChild(colWrap);
+        document.getElementById(`count-${col}`).textContent = count;
+      });
+    }
+
+    /* ======= Drag & Drop ======= */
+    let draggedId = null;
+    function onDragStart(e){
+      this.classList.add('dragging');
+      draggedId = this.dataset.id;
+      e.dataTransfer.setData('text/plain', draggedId);
+    }
+    function onDragEnd(e){
+      this.classList.remove('dragging');
+      draggedId = null;
+    }
+    function onDrop(e){
+      e.preventDefault();
+      this.style.outline='none';
+      const id = e.dataTransfer.getData('text/plain') || draggedId;
+      if(!id) return;
+      const status = this.dataset.status;
+      const it = items.find(x=>x.id===id);
+      if(it){
+        it.status = status;
+        save(items);
+        render();
+      }
+    }
+
+    /* ======= Modal: create / edit ======= */
+    const modal = document.getElementById('modal');
+    const btnNew = document.getElementById('btnNew');
+    const btnCancel = document.getElementById('btnCancel');
+    const issueForm = document.getElementById('issueForm');
+    const modalTitle = document.getElementById('modalTitle');
+
+    let editId = null;
+
+    btnNew.addEventListener('click',()=>{ openCreate() });
+    btnCancel.addEventListener('click',closeModal);
+
+    issueForm.addEventListener('submit',e=>{
+      e.preventDefault();
+      const type = document.getElementById('type').value;
+      const status = document.getElementById('status').value;
+      const title = document.getElementById('title').value.trim();
+      const desc = document.getElementById('desc').value.trim();
+      if(!title) return alert('El título es obligatorio');
+
+      if(editId){
+        const it = items.find(x=>x.id===editId);
+        if(it){it.type=type;it.status=status;it.title=title;it.desc=desc}
+      }else{
+        items.push({id:genId(),type,status,title,desc});
+      }
+      save(items);
+      closeModal();
+      render();
+    });
+
+    function openCreate(){
+      editId=null;modalTitle.textContent='Crear incidencia';
+      document.getElementById('type').value='Incidencia';
+      document.getElementById('status').value='por hacer';
+      document.getElementById('title').value='';
+      document.getElementById('desc').value='';
+      modal.style.display='flex';
+    }
+
+    function openEdit(id){
+      const it = items.find(x=>x.id===id); if(!it) return;
+      editId = id; modalTitle.textContent='Editar incidencia';
+      document.getElementById('type').value=it.type;
+      document.getElementById('status').value=it.status;
+      document.getElementById('title').value=it.title;
+      document.getElementById('desc').value=it.desc||'';
+      modal.style.display='flex';
+    }
+
+    function closeModal(){ modal.style.display='none'; editId=null }
+
+    // simple right-click menu
+    function openMenu(x,y,id){
+      // remove old
+      const existing = document.getElementById('ctx'); if(existing) existing.remove();
+      const menu = document.createElement('div'); menu.id='ctx';
+      menu.style.position='absolute'; menu.style.left=x+'px'; menu.style.top=y+'px';
+      menu.style.background='#fff'; menu.style.color='#022'; menu.style.borderRadius='8px'; menu.style.padding='6px'; menu.style.boxShadow='0 6px 20px rgba(2,6,23,0.6)';
+      menu.innerHTML = `<div style='padding:6px 10px;cursor:pointer' data-act='edit'>Editar</div><div style='padding:6px 10px;cursor:pointer' data-act='del'>Eliminar</div>`;
+      document.body.appendChild(menu);
+      menu.addEventListener('click',e=>{
+        const act = e.target.dataset.act; if(act==='edit') openEdit(id);
+        if(act==='del'){
+          if(confirm('Eliminar tarjeta?')){ items = items.filter(x=>x.id!==id); save(items); render(); }
+        }
+        menu.remove();
+      });
+      document.addEventListener('click',()=>menu.remove(),{once:true});
+    }
+
+    /* ======= Utilities ======= */
+    function cap(s){return s.split(' ').map(x=>x[0].toUpperCase()+x.slice(1)).join(' ')}
+    function escapeHtml(str){ if(!str) return ''; return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;') }
+
+    // filtering
+    filterType.addEventListener('change',()=>render());
+    search.addEventListener('input',()=>render());
+
+    // reset demo
+    document.getElementById('btnReset').addEventListener('click',()=>{if(confirm('Restaurar demo a datos de ejemplo?')){items = sample.slice(); save(items); render();}})
+
+    // initial render
+    render();
+
+    // expose for debugging
+    window.__kanban = {items,save,render};
+
+  </script>
+</body>
+</html>

@@ -1,0 +1,1693 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Roadmap del Proyecto – Más Vida</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<style>
+  body {
+    font-family: "Segoe UI", sans-serif;
+    background-color: #f8f9fa;
+    margin: 0;
+    padding: 20px;
+    transition: background-color 0.3s, color 0.3s;
+  }
+
+  body.dark-mode {
+    background-color: #1a1a1a;
+    color: #e0e0e0;
+  }
+
+  h1 {
+    text-align: center;
+    color: #333;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+  }
+
+  body.dark-mode h1 {
+    color: #e0e0e0;
+  }
+
+  .theme-toggle {
+    background: none;
+    border: 2px solid #333;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s;
+  }
+
+  .theme-toggle:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 10px rgba(0,0,0,0.2);
+  }
+
+  body.dark-mode .theme-toggle {
+    border-color: #e0e0e0;
+  }
+
+  .tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #dee2e6;
+  }
+
+  body.dark-mode .tabs {
+    border-bottom-color: #444;
+  }
+
+  .tab {
+    padding: 10px 20px;
+    background-color: #e9ecef;
+    border: none;
+    border-radius: 5px 5px 0 0;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+    transition: background-color 0.3s;
+  }
+
+  body.dark-mode .tab {
+    background-color: #2a2a2a;
+    color: #e0e0e0;
+  }
+
+  .tab.active {
+    background-color: #fff;
+    border-bottom: 2px solid #fff;
+    margin-bottom: -2px;
+  }
+
+  body.dark-mode .tab.active {
+    background-color: #333;
+    border-bottom-color: #333;
+  }
+
+  .tab:hover {
+    background-color: #dee2e6;
+  }
+
+  body.dark-mode .tab:hover {
+    background-color: #3a3a3a;
+  }
+
+  .tab.active:hover {
+    background-color: #fff;
+  }
+
+  body.dark-mode .tab.active:hover {
+    background-color: #333;
+  }
+
+  .tab-content {
+    display: none;
+  }
+
+  .tab-content.active {
+    display: block;
+  }
+
+  #formContainer {
+    background: white;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+    transition: background-color 0.3s, box-shadow 0.3s;
+  }
+
+  body.dark-mode #formContainer {
+    background: #2a2a2a;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+  }
+
+  label {
+    font-weight: bold;
+  }
+
+  body.dark-mode label {
+    color: #e0e0e0;
+  }
+
+  input, select, button {
+    margin: 5px 10px 10px 0;
+    padding: 6px;
+    transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+  }
+
+  body.dark-mode input,
+  body.dark-mode select {
+    background-color: #333;
+    color: #e0e0e0;
+    border: 1px solid #555;
+  }
+
+  .btn-add {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+  .btn-add:hover {
+    background-color: #218838;
+  }
+
+  .btn-delete {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+  .btn-delete:hover {
+    background-color: #c82333;
+  }
+
+  .btn-cancel {
+    background-color: #6c757d;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+  .btn-cancel:hover {
+    background-color: #5a6268;
+  }
+
+  .btn-save-view {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+  .btn-save-view:hover {
+    background-color: #0056b3;
+  }
+
+  .controls {
+    margin-bottom: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .controls button {
+    background-color: #6c757d;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 12px;
+  }
+
+  .controls button:hover {
+    background-color: #5a6268;
+  }
+
+  .table-container {
+    max-height: 500px;
+    overflow-y: auto;
+    background: white;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    transition: background-color 0.3s, box-shadow 0.3s;
+  }
+
+  body.dark-mode .table-container {
+    background: #2a2a2a;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    transition: background-color 0.3s;
+  }
+
+  body.dark-mode table {
+    background: #2a2a2a;
+  }
+
+  thead {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+
+  th, td {
+    border: 1px solid #ddd;
+    padding: 6px;
+    text-align: center;
+    font-size: 13px;
+    transition: border-color 0.3s, background-color 0.3s;
+  }
+
+  body.dark-mode th,
+  body.dark-mode td {
+    border-color: #444;
+  }
+
+  th {
+    background-color: #e9ecef;
+    position: relative;
+  }
+
+  body.dark-mode th {
+    background-color: #333;
+    color: #e0e0e0;
+  }
+
+  .collapsible-header {
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .collapsible-header:hover {
+    background-color: #dee2e6;
+  }
+
+  .collapsible-header::after {
+    content: " ▼";
+    font-size: 10px;
+  }
+
+  .collapsible-header.collapsed::after {
+    content: " ▶";
+  }
+
+  .collapsed-col {
+    display: none;
+  }
+
+  .bar {
+    height: 20px;
+    border-radius: 4px;
+  }
+
+  .done { background-color: #4caf50; }
+  .in-progress { background-color: #2196f3; }
+  .pending { background-color: #ff9800; }
+  .future { background-color: #9e9e9e; }
+
+  .legend {
+    margin-top: 15px;
+  }
+
+  .legend span {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 4px;
+    color: #fff;
+    margin-right: 10px;
+  }
+
+  tbody tr:hover {
+    background-color: #f1f3f5;
+    cursor: move;
+  }
+
+  tbody tr.dragging {
+    opacity: 0.5;
+    background-color: #dee2e6;
+  }
+
+  tbody tr.drag-over {
+    border-top: 3px solid #007bff;
+  }
+
+  .saved-views {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  }
+
+  .config-section {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+  }
+
+  .config-section h3 {
+    margin-top: 0;
+    color: #333;
+    border-bottom: 2px solid #e9ecef;
+    padding-bottom: 10px;
+  }
+
+  .estado-config {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+    padding: 10px;
+    background: #f8f9fa;
+    border-radius: 5px;
+  }
+
+  .estado-config input[type="text"] {
+    flex: 1;
+    padding: 8px;
+  }
+
+  .estado-config input[type="color"] {
+    width: 50px;
+    height: 35px;
+    border: none;
+    cursor: pointer;
+  }
+
+  .estado-preview {
+    padding: 5px 15px;
+    border-radius: 4px;
+    color: white;
+    min-width: 100px;
+    text-align: center;
+  }
+
+  .mes-config {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+    padding: 10px;
+    background: #f8f9fa;
+    border-radius: 5px;
+  }
+
+  .mes-config label {
+    min-width: 80px;
+    font-weight: normal;
+  }
+
+  .mes-config input[type="text"] {
+    flex: 1;
+    padding: 8px;
+    max-width: 200px;
+  }
+
+  .mes-config button {
+    padding: 6px 12px;
+  }
+
+  .view-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    margin-bottom: 10px;
+    background: #f8f9fa;
+    border-radius: 5px;
+    border: 1px solid #dee2e6;
+  }
+
+  .view-item:hover {
+    background: #e9ecef;
+  }
+
+  .view-name {
+    font-weight: bold;
+    flex: 1;
+  }
+
+  .view-date {
+    color: #6c757d;
+    font-size: 12px;
+    margin-right: 10px;
+  }
+
+  .view-actions button {
+    margin-left: 5px;
+  }
+
+  #captureArea {
+    background: white;
+    padding: 20px;
+  }
+</style>
+</head>
+<body>
+
+<h1>
+  Roadmap del Proyecto – Más Vida
+  <button class="theme-toggle" onclick="toggleTheme()" id="themeToggle" title="Cambiar tema">
+    🌙
+  </button>
+</h1>
+
+<div class="tabs">
+  <button class="tab active" onclick="switchTab('roadmap')">Roadmap</button>
+  <button class="tab" onclick="switchTab('vistas')">Vistas Guardadas</button>
+  <button class="tab" onclick="switchTab('configuracion')">⚙️ Configuración</button>
+</div>
+
+<div id="roadmapTab" class="tab-content active">
+  <div id="formContainer">
+    <label>Módulo:</label><input type="text" id="modulo" placeholder="Ej: Prestaciones">
+    <label>Sprint inicio:</label><input type="number" id="sprint" min="1" max="16" style="width:60px;">
+    <label>Duración:</label><input type="number" id="duracion" min="1" max="16" style="width:60px;">
+    <label>Estado:</label>
+    <select id="estado">
+      <option value="done">Completado</option>
+      <option value="in-progress">En progreso</option>
+      <option value="pending">Pendiente</option>
+      <option value="future">Futuro</option>
+    </select>
+    <button class="btn-add" id="btnAgregar">Agregar / Actualizar</button>
+    <button class="btn-delete" id="btnEliminar" style="display:none;">Eliminar</button>
+    <button class="btn-cancel" id="btnCancelar" style="display:none;">Cancelar</button>
+  </div>
+
+  <div class="controls">
+    <div>
+      <button id="btnToggleSprint">Contraer/Expandir Sprint</button>
+      <button id="btnToggleDuracion">Contraer/Expandir Duración</button>
+    </div>
+    <div>
+      <button class="btn-save-view" onclick="guardarVistaModal()">💾 Guardar Vista Actual</button>
+      <button class="btn-save-view" onclick="exportarGrillaPNG()">📊 Exportar Grilla (PNG)</button>
+    </div>
+  </div>
+
+  <div id="captureArea">
+    <div class="table-container">
+      <table id="ganttTable">
+        <thead>
+          <tr>
+            <th rowspan="2">Módulo</th>
+            <th rowspan="2" class="collapsible-header col-sprint" id="headerSprint">Sprint</th>
+            <th rowspan="2" class="collapsible-header col-duracion" id="headerDuracion">Duración</th>
+            <th colspan="16">Meses (Abr 2025 - Jul 2026)</th>
+          </tr>
+          <tr>
+            <th>Abr</th><th>May</th><th>Jun</th><th>Jul</th><th>Ago</th><th>Sep</th><th>Oct</th><th>Nov</th>
+            <th>Dic</th><th>Ene</th><th>Feb</th><th>Mar</th><th>Abr</th><th>May</th><th>Jun</th><th>Jul</th>
+          </tr>
+          <tr>
+            <th></th>
+            <th class="col-sprint">S</th>
+            <th class="col-duracion">D</th>
+            <th>S1</th><th>S2</th><th>S3</th><th>S4</th><th>S5</th><th>S6</th><th>S7</th><th>S8</th>
+            <th>S9</th><th>S10</th><th>S11</th><th>S12</th><th>S13</th><th>S14</th><th>S15</th><th>S16</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <div class="legend">
+      <p><strong>Leyenda:</strong></p>
+      <div id="legendaEstados"></div>
+    </div>
+  </div>
+</div>
+
+<div id="vistasTab" class="tab-content">
+  <div class="saved-views">
+    <h2>Vistas Guardadas</h2>
+    
+    <div style="margin-bottom: 20px; padding: 15px; background: #e7f3ff; border-radius: 5px; border-left: 4px solid #007bff;">
+      <h3 style="margin-top: 0;">Exportar/Importar Vistas</h3>
+      <p style="margin: 10px 0; color: #333;">Comparte tus vistas con otros usuarios exportándolas a un archivo JSON.</p>
+      <button class="btn-save-view" onclick="exportarVistas()">📥 Exportar Todas las Vistas</button>
+      <button class="btn-add" onclick="document.getElementById('importFile').click()">📤 Importar Vistas</button>
+      <input type="file" id="importFile" accept=".json" style="display:none;" onchange="importarVistas(event)">
+    </div>
+
+    <div id="vistasList"></div>
+    <p id="noVistas" style="color: #6c757d; text-align: center; display: none;">
+      No hay vistas guardadas. Ve a la pestaña Roadmap y haz clic en "Guardar Vista Actual" para crear una.
+    </p>
+  </div>
+</div>
+
+<div id="configuracionTab" class="tab-content">
+  <div class="config-section">
+    <h3>Gestión de Estados</h3>
+    <p style="color: #6c757d; margin-bottom: 20px;">
+      Configura los estados que aparecerán en el selector del roadmap. Personaliza el nombre y el color de cada estado.
+    </p>
+    
+    <div id="estadosConfigList"></div>
+    
+    <button class="btn-add" onclick="agregarNuevoEstado()">➕ Agregar Nuevo Estado</button>
+    <button class="btn-cancel" onclick="restaurarEstadosDefault()">🔄 Restaurar Estados por Defecto</button>
+  </div>
+
+  <div class="config-section">
+    <h3>Configuración de Sprints/Meses</h3>
+    <p style="color: #6c757d; margin-bottom: 20px;">
+      Configura los meses y sprints del roadmap. Puedes personalizar el nombre de cada mes y la cantidad total de sprints.
+    </p>
+    
+    <div style="margin-bottom: 20px;">
+      <label style="font-weight: bold;">Cantidad de Sprints:</label>
+      <input type="number" id="cantidadSprints" min="1" max="24" value="16" style="width: 80px; margin-left: 10px;">
+      <button class="btn-add" onclick="actualizarCantidadSprints()">Actualizar</button>
+    </div>
+
+    <div id="mesesConfigList"></div>
+    
+    <button class="btn-cancel" onclick="restaurarMesesDefault()">🔄 Restaurar Meses por Defecto</button>
+  </div>
+</div>
+
+<script>
+const STORAGE_KEY = 'ganttData';
+const COLUMNS_KEY = 'ganttColumns';
+const VIEWS_KEY = 'ganttViews';
+const ESTADOS_KEY = 'ganttEstados';
+const MESES_KEY = 'ganttMeses';
+const SPRINTS_KEY = 'ganttSprints';
+const THEME_KEY = 'ganttTheme';
+
+let data = [];
+let collapsedColumns = { sprint: false, duracion: false };
+let moduloEditando = null;
+let estados = [];
+let meses = [];
+let cantidadSprints = 16;
+
+function loadData() {
+  const savedData = localStorage.getItem(STORAGE_KEY);
+  if (savedData) {
+    try {
+      data = JSON.parse(savedData);
+    } catch (e) {
+      console.error("Error loading data:", e);
+      data = getDefaultData();
+    }
+  } else {
+    data = getDefaultData();
+  }
+}
+
+function getDefaultData() {
+  return [
+    { modulo: "Autenticación", sprint: 1, duracion: 1, estado: "done" },
+    { modulo: "Mi perfil", sprint: 1, duracion: 1, estado: "done" },
+    { modulo: "Perfiles", sprint: 1, duracion: 1, estado: "done" },
+    { modulo: "Usuarios", sprint: 1, duracion: 1, estado: "done" },
+    { modulo: "Cliente", sprint: 2, duracion: 1, estado: "done" },
+    { modulo: "Tipos de prestaciones", sprint: 2, duracion: 1, estado: "done" },
+    { modulo: "Especialidades", sprint: 3, duracion: 1, estado: "done" },
+    { modulo: "Profesionales", sprint: 3, duracion: 1, estado: "done" },
+    { modulo: "Empresas prestadoras", sprint: 4, duracion: 1, estado: "done" },
+    { modulo: "Locaciones", sprint: 5, duracion: 1, estado: "done" },
+    { modulo: "Prestaciones", sprint: 6, duracion: 1, estado: "in-progress" },
+    { modulo: "Módulo de pacientes", sprint: 6, duracion: 2, estado: "in-progress" },
+    { modulo: "Servicios", sprint: 7, duracion: 2, estado: "pending" },
+    { modulo: "Módulo de pacientes II", sprint: 9, duracion: 1, estado: "future" },
+    { modulo: "Liquidación y Facturación", sprint: 9, duracion: 1, estado: "future" },
+    { modulo: "Tarifario cliente", sprint: 9, duracion: 2, estado: "future" },
+    { modulo: "Tarifario prestadores", sprint: 10, duracion: 2, estado: "future" },
+    { modulo: "Ajustes liquidación / facturación", sprint: 11, duracion: 1, estado: "future" },
+    { modulo: "Ajustes prestaciones", sprint: 11, duracion: 1, estado: "future" },
+    { modulo: "Ajustes servicios", sprint: 11, duracion: 1, estado: "future" },
+    { modulo: "Implementación PROD", sprint: 11, duracion: 2, estado: "future" },
+  ];
+}
+
+function saveData() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  } catch (e) {
+    console.error("Error saving data:", e);
+    alert("Error al guardar los datos");
+  }
+}
+
+function loadColumnState() {
+  const savedColumns = localStorage.getItem(COLUMNS_KEY);
+  if (savedColumns) {
+    try {
+      collapsedColumns = JSON.parse(savedColumns);
+      applyColumnState();
+    } catch (e) {
+      console.error("Error loading column state:", e);
+    }
+  }
+}
+
+function saveColumnState() {
+  try {
+    localStorage.setItem(COLUMNS_KEY, JSON.stringify(collapsedColumns));
+  } catch (e) {
+    console.error("Error saving column state:", e);
+  }
+}
+
+function loadViews() {
+  const savedViews = localStorage.getItem(VIEWS_KEY);
+  if (savedViews) {
+    try {
+      return JSON.parse(savedViews);
+    } catch (e) {
+      console.error("Error loading views:", e);
+      return [];
+    }
+  }
+  return [];
+}
+
+function saveViews(views) {
+  try {
+    localStorage.setItem(VIEWS_KEY, JSON.stringify(views));
+  } catch (e) {
+    console.error("Error saving views:", e);
+    alert("Error al guardar las vistas");
+  }
+}
+
+function getDefaultEstados() {
+  return [
+    { id: 'done', nombre: 'Completado', color: '#4caf50' },
+    { id: 'in-progress', nombre: 'En progreso', color: '#2196f3' },
+    { id: 'pending', nombre: 'Pendiente', color: '#ff9800' },
+    { id: 'future', nombre: 'Futuro', color: '#9e9e9e' }
+  ];
+}
+
+function loadEstados() {
+  const savedEstados = localStorage.getItem(ESTADOS_KEY);
+  if (savedEstados) {
+    try {
+      estados = JSON.parse(savedEstados);
+    } catch (e) {
+      console.error("Error loading estados:", e);
+      estados = getDefaultEstados();
+    }
+  } else {
+    estados = getDefaultEstados();
+  }
+}
+
+function saveEstados() {
+  try {
+    localStorage.setItem(ESTADOS_KEY, JSON.stringify(estados));
+    actualizarSelectEstados();
+    actualizarEstilosEstados();
+    actualizarLeyenda();
+    saveAll();
+  } catch (e) {
+    console.error("Error saving estados:", e);
+    alert("Error al guardar los estados");
+  }
+}
+
+function getDefaultMeses() {
+  return [
+    'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov',
+    'Dic', 'Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul'
+  ];
+}
+
+function loadMeses() {
+  const savedMeses = localStorage.getItem(MESES_KEY);
+  if (savedMeses) {
+    try {
+      meses = JSON.parse(savedMeses);
+    } catch (e) {
+      console.error("Error loading meses:", e);
+      meses = getDefaultMeses();
+    }
+  } else {
+    meses = getDefaultMeses();
+  }
+}
+
+function saveMeses() {
+  try {
+    localStorage.setItem(MESES_KEY, JSON.stringify(meses));
+    renderGantt();
+    saveAll();
+  } catch (e) {
+    console.error("Error saving meses:", e);
+    alert("Error al guardar los meses");
+  }
+}
+
+function loadCantidadSprints() {
+  const saved = localStorage.getItem(SPRINTS_KEY);
+  if (saved) {
+    try {
+      cantidadSprints = parseInt(saved);
+    } catch (e) {
+      console.error("Error loading sprints:", e);
+      cantidadSprints = 16;
+    }
+  } else {
+    cantidadSprints = 16;
+  }
+}
+
+function saveCantidadSprints() {
+  try {
+    localStorage.setItem(SPRINTS_KEY, cantidadSprints.toString());
+  } catch (e) {
+    console.error("Error saving sprints:", e);
+  }
+}
+
+function actualizarLeyenda() {
+  const legendaContainer = document.getElementById('legendaEstados');
+  if (!legendaContainer) return;
+  
+  legendaContainer.innerHTML = estados.map(estado => 
+    `<span class="${estado.id.replace(/[^a-zA-Z0-9-_]/g, '')}" style="background-color: ${estado.color}">${estado.nombre}</span>`
+  ).join('');
+}
+
+function applyColumnState() {
+  for (const col in collapsedColumns) {
+    const isCollapsed = collapsedColumns[col];
+    const elements = document.querySelectorAll(`.col-${col}`);
+    elements.forEach(el => {
+      if (isCollapsed) {
+        el.classList.add('collapsed-col');
+        if (el.classList.contains('collapsible-header')) {
+          el.classList.add('collapsed');
+        }
+      } else {
+        el.classList.remove('collapsed-col');
+        if (el.classList.contains('collapsible-header')) {
+          el.classList.remove('collapsed');
+        }
+      }
+    });
+  }
+}
+
+function toggleColumn(columnName) {
+  collapsedColumns[columnName] = !collapsedColumns[columnName];
+  applyColumnState();
+  saveColumnState();
+}
+
+function renderGantt() {
+  const tbody = document.querySelector("#ganttTable tbody");
+  const thead = document.querySelector("#ganttTable thead");
+  
+  // Actualizar encabezado
+  thead.innerHTML = `
+    <tr>
+      <th rowspan="2">Módulo</th>
+      <th rowspan="2" class="collapsible-header col-sprint" id="headerSprint">Sprint</th>
+      <th rowspan="2" class="collapsible-header col-duracion" id="headerDuracion">Duración</th>
+      <th colspan="${cantidadSprints}">Timeline</th>
+    </tr>
+    <tr>
+      ${meses.slice(0, cantidadSprints).map(mes => `<th>${mes}</th>`).join('')}
+    </tr>
+    <tr>
+      <th></th>
+      <th class="col-sprint">S</th>
+      <th class="col-duracion">D</th>
+      ${Array.from({length: cantidadSprints}, (_, i) => `<th>S${i + 1}</th>`).join('')}
+    </tr>
+  `;
+  
+  // Re-agregar event listeners a los headers
+  document.getElementById("headerSprint").addEventListener('click', () => toggleColumn('sprint'));
+  document.getElementById("headerDuracion").addEventListener('click', () => toggleColumn('duracion'));
+  
+  tbody.innerHTML = "";
+  data.forEach((item, index) => {
+    const tr = document.createElement("tr");
+    tr.draggable = true;
+    tr.dataset.index = index;
+    tr.innerHTML = `
+      <td>${item.modulo}</td>
+      <td class="col-sprint">${item.sprint}</td>
+      <td class="col-duracion">${item.duracion}</td>
+    `;
+    for (let i = 1; i <= cantidadSprints; i++) {
+      const td = document.createElement("td");
+      if (i >= item.sprint && i < item.sprint + item.duracion) {
+        td.innerHTML = `<div class="bar ${item.estado}" title="${item.estado}"></div>`;
+      }
+      tr.appendChild(td);
+    }
+    
+    // Click para editar
+    tr.addEventListener('click', function(e) {
+      if (!tr.classList.contains('dragging')) {
+        editarFila(item);
+      }
+    });
+    
+    // Eventos de drag and drop
+    tr.addEventListener('dragstart', handleDragStart);
+    tr.addEventListener('dragover', handleDragOver);
+    tr.addEventListener('drop', handleDrop);
+    tr.addEventListener('dragend', handleDragEnd);
+    tr.addEventListener('dragleave', handleDragLeave);
+    
+    tbody.appendChild(tr);
+  });
+  applyColumnState();
+}
+
+let draggedElement = null;
+
+function handleDragStart(e) {
+  draggedElement = this;
+  this.classList.add('dragging');
+  e.dataTransfer.effectAllowed = 'move';
+  e.dataTransfer.setData('text/html', this.innerHTML);
+}
+
+function handleDragOver(e) {
+  if (e.preventDefault) {
+    e.preventDefault();
+  }
+  e.dataTransfer.dropEffect = 'move';
+  
+  const afterElement = getDragAfterElement(this.parentElement, e.clientY);
+  if (afterElement == null) {
+    this.classList.add('drag-over');
+  } else {
+    this.classList.remove('drag-over');
+  }
+  
+  return false;
+}
+
+function handleDrop(e) {
+  if (e.stopPropagation) {
+    e.stopPropagation();
+  }
+  
+  if (draggedElement !== this) {
+    const draggedIndex = parseInt(draggedElement.dataset.index);
+    const targetIndex = parseInt(this.dataset.index);
+    
+    // Reordenar el array data
+    const [removed] = data.splice(draggedIndex, 1);
+    data.splice(targetIndex, 0, removed);
+    
+    saveData();
+    renderGantt();
+    saveAll();
+
+  }
+  
+  return false;
+}
+
+function handleDragEnd(e) {
+  this.classList.remove('dragging');
+  document.querySelectorAll('#ganttTable tbody tr').forEach(tr => {
+    tr.classList.remove('drag-over');
+  });
+}
+
+function handleDragLeave(e) {
+  this.classList.remove('drag-over');
+}
+
+function getDragAfterElement(container, y) {
+  const draggableElements = [...container.querySelectorAll('tr:not(.dragging)')];
+  
+  return draggableElements.reduce((closest, child) => {
+    const box = child.getBoundingClientRect();
+    const offset = y - box.top - box.height / 2;
+    
+    if (offset < 0 && offset > closest.offset) {
+      return { offset: offset, element: child };
+    } else {
+      return closest;
+    }
+  }, { offset: Number.NEGATIVE_INFINITY }).element;
+}
+
+function agregarFila() {
+  const modulo = document.getElementById("modulo").value.trim();
+  const sprint = parseInt(document.getElementById("sprint").value);
+  const duracion = parseInt(document.getElementById("duracion").value);
+  const estado = document.getElementById("estado").value;
+
+  if (!modulo || isNaN(sprint) || isNaN(duracion)) {
+    alert("Por favor, completa todos los campos.");
+    return;
+  }
+
+  if (moduloEditando && moduloEditando !== modulo) {
+    const existente = data.find(d => d.modulo === moduloEditando);
+    if (existente) {
+      existente.modulo = modulo;
+      existente.sprint = sprint;
+      existente.duracion = duracion;
+      existente.estado = estado;
+    }
+  } else {
+    const existente = data.find(d => d.modulo === modulo);
+    if (existente) {
+      existente.sprint = sprint;
+      existente.duracion = duracion;
+      existente.estado = estado;
+    } else {
+      data.push({ modulo, sprint, duracion, estado });
+    }
+  }
+
+  saveData();
+  limpiarFormulario();
+  renderGantt();
+  saveAll();
+
+}
+
+function editarFila(item) {
+  moduloEditando = item.modulo;
+  document.getElementById("modulo").value = item.modulo;
+  document.getElementById("sprint").value = item.sprint;
+  document.getElementById("duracion").value = item.duracion;
+  document.getElementById("estado").value = item.estado;
+  
+  document.getElementById("btnEliminar").style.display = "inline-block";
+  document.getElementById("btnCancelar").style.display = "inline-block";
+}
+
+function eliminarFila() {
+  if (!moduloEditando) {
+    alert("No hay ningún módulo seleccionado para eliminar.");
+    return;
+  }
+  
+  data = data.filter(item => item.modulo !== moduloEditando);
+  saveData();
+  limpiarFormulario();
+  renderGantt();
+  saveAll();
+
+}
+
+function cancelarEdicion() {
+  limpiarFormulario();
+}
+
+function limpiarFormulario() {
+  moduloEditando = null;
+  document.getElementById("modulo").value = "";
+  document.getElementById("sprint").value = "";
+  document.getElementById("duracion").value = "";
+  document.getElementById("estado").value = "done";
+  document.getElementById("btnEliminar").style.display = "none";
+  document.getElementById("btnCancelar").style.display = "none";
+}
+
+function switchTab(tabName) {
+  document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+  
+  if (tabName === 'roadmap') {
+    document.querySelector('.tab:nth-child(1)').classList.add('active');
+    document.getElementById('roadmapTab').classList.add('active');
+  } else if (tabName === 'vistas') {
+    document.querySelector('.tab:nth-child(2)').classList.add('active');
+    document.getElementById('vistasTab').classList.add('active');
+    renderVistasList();
+  } else if (tabName === 'configuracion') {
+    document.querySelector('.tab:nth-child(3)').classList.add('active');
+    document.getElementById('configuracionTab').classList.add('active');
+    renderEstadosConfig();
+    renderMesesConfig();
+  }
+}
+
+function guardarVistaModal() {
+  const nombreVista = prompt("Ingresa un nombre para esta vista:");
+  if (nombreVista && nombreVista.trim()) {
+    guardarVista(nombreVista.trim());
+  }
+}
+
+function guardarVista(nombre) {
+  const views = loadViews();
+  const newView = {
+    id: Date.now(),
+    nombre: nombre,
+    fecha: new Date().toLocaleString('es-AR'),
+    data: JSON.parse(JSON.stringify(data)),
+    columns: JSON.parse(JSON.stringify(collapsedColumns))
+  };
+  
+  views.push(newView);
+  saveViews(views);
+  alert(`Vista "${nombre}" guardada exitosamente!`);
+  saveAll();
+}
+
+function cargarVista(id) {
+  const views = loadViews();
+  const view = views.find(v => v.id === id);
+  
+  if (view) {
+    data = JSON.parse(JSON.stringify(view.data));
+    collapsedColumns = JSON.parse(JSON.stringify(view.columns));
+    saveData();
+    saveColumnState();
+    renderGantt();
+    applyColumnState();
+    switchTab('roadmap');
+    alert(`Vista "${view.nombre}" cargada exitosamente!`);
+  }
+}
+
+function eliminarVista(id) {
+  let views = loadViews();
+  const view = views.find(v => v.id === id);
+  
+  if (view) {
+    views = views.filter(v => v.id !== id);
+    saveViews(views);
+    renderVistasList();
+    alert(`Vista "${view.nombre}" eliminada.`);
+  }
+}
+
+function renderVistasList() {
+  const views = loadViews();
+  const container = document.getElementById('vistasList');
+  const noVistas = document.getElementById('noVistas');
+  
+  if (views.length === 0) {
+    container.innerHTML = '';
+    noVistas.style.display = 'block';
+    return;
+  }
+  
+  noVistas.style.display = 'none';
+  container.innerHTML = views.map(view => `
+    <div class="view-item">
+      <div class="view-name">${view.nombre}</div>
+      <div class="view-date">${view.fecha}</div>
+      <div class="view-actions">
+        <button class="btn-add" onclick="cargarVista(${view.id})">Cargar</button>
+        <button class="btn-delete" onclick="eliminarVista(${view.id})">Eliminar</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function exportarVistas() {
+  const views = loadViews();
+  
+  if (views.length === 0) {
+    alert("No hay vistas para exportar. Guarda al menos una vista primero.");
+    return;
+  }
+  
+  const dataStr = JSON.stringify(views, null, 2);
+  const dataBlob = new Blob([dataStr], { type: 'application/json' });
+  const url = URL.createObjectURL(dataBlob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = `roadmap_vistas_${new Date().toISOString().split('T')[0]}.json`;
+  link.click();
+  URL.revokeObjectURL(url);
+  
+  alert(`${views.length} vista(s) exportada(s) exitosamente!`);
+}
+
+function importarVistas(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const importedViews = JSON.parse(e.target.result);
+      
+      if (!Array.isArray(importedViews)) {
+        alert("Formato de archivo inválido.");
+        return;
+      }
+      
+      const currentViews = loadViews();
+      let nuevasVistas = 0;
+      
+      importedViews.forEach(importedView => {
+        const existe = currentViews.find(v => v.id === importedView.id);
+        if (!existe) {
+          currentViews.push(importedView);
+          nuevasVistas++;
+        }
+      });
+      
+      saveViews(currentViews);
+      renderVistasList();
+      
+      alert(`${nuevasVistas} vista(s) importada(s) exitosamente!`);
+    } catch (error) {
+      alert("Error al leer el archivo. Asegúrate de que sea un archivo JSON válido.");
+    }
+  };
+  reader.readAsText(file);
+  event.target.value = '';
+}
+
+function exportarGrillaPNG() {
+  const captureArea = document.getElementById('captureArea');
+  const tableContainer = captureArea.querySelector('.table-container');
+  
+  // Temporalmente quitar el max-height y scroll para capturar todo
+  const originalMaxHeight = tableContainer.style.maxHeight;
+  const originalOverflow = tableContainer.style.overflow;
+  tableContainer.style.maxHeight = 'none';
+  tableContainer.style.overflow = 'visible';
+  
+  html2canvas(captureArea, {
+    scale: 2,
+    backgroundColor: '#ffffff',
+    logging: false,
+    allowTaint: true,
+    useCORS: true
+  }).then(canvas => {
+    // Restaurar estilos originales
+    tableContainer.style.maxHeight = originalMaxHeight;
+    tableContainer.style.overflow = originalOverflow;
+    
+    // Convertir canvas a blob y descargar
+    canvas.toBlob(function(blob) {
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `roadmap_gantt_${new Date().toISOString().split('T')[0]}.png`;
+      link.click();
+      URL.revokeObjectURL(url);
+      alert("Grilla exportada exitosamente como PNG!");
+    });
+  }).catch(error => {
+    // Restaurar estilos en caso de error
+    tableContainer.style.maxHeight = originalMaxHeight;
+    tableContainer.style.overflow = originalOverflow;
+    console.error("Error al exportar:", error);
+    alert("Error al exportar la grilla. Por favor, intenta nuevamente.");
+  });
+}
+
+function renderEstadosConfig() {
+  const container = document.getElementById('estadosConfigList');
+  if (!container) {
+    console.error("Container estadosConfigList not found");
+    return;
+  }
+  
+  container.innerHTML = '';
+  
+  estados.forEach((estado, index) => {
+    const estadoDiv = document.createElement('div');
+    estadoDiv.className = 'estado-config';
+    
+    const inputNombre = document.createElement('input');
+    inputNombre.type = 'text';
+    inputNombre.value = estado.nombre;
+    inputNombre.placeholder = 'Nombre del estado';
+    inputNombre.addEventListener('change', function() {
+      actualizarEstadoNombre(index, this.value);
+    });
+    
+    const inputColor = document.createElement('input');
+    inputColor.type = 'color';
+    inputColor.value = estado.color;
+    inputColor.addEventListener('change', function() {
+      actualizarEstadoColor(index, this.value);
+    });
+    
+    const preview = document.createElement('div');
+    preview.className = 'estado-preview';
+    preview.style.backgroundColor = estado.color;
+    preview.textContent = estado.nombre;
+    
+    const btnEliminar = document.createElement('button');
+    btnEliminar.className = 'btn-delete';
+    btnEliminar.textContent = 'Eliminar';
+    btnEliminar.addEventListener('click', function() {
+      eliminarEstado(index);
+    });
+    
+    estadoDiv.appendChild(inputNombre);
+    estadoDiv.appendChild(inputColor);
+    estadoDiv.appendChild(preview);
+    estadoDiv.appendChild(btnEliminar);
+    
+    container.appendChild(estadoDiv);
+  });
+}
+
+function actualizarEstadoNombre(index, nuevoNombre) {
+  if (nuevoNombre.trim()) {
+    estados[index].nombre = nuevoNombre.trim();
+    saveEstados();
+    renderEstadosConfig();
+    renderGantt();
+    saveAll();
+  }
+}
+
+function actualizarEstadoColor(index, nuevoColor) {
+  estados[index].color = nuevoColor;
+  saveEstados();
+  renderEstadosConfig();
+  renderGantt();
+  saveAll();
+}
+
+function eliminarEstado(index) {
+  if (estados.length <= 1) {
+    alert("Debe haber al menos un estado disponible.");
+    return;
+  }
+  
+  const estadoId = estados[index].id;
+  const enUso = data.some(item => item.estado === estadoId);
+  
+  if (enUso) {
+    if (!confirm(`El estado "${estados[index].nombre}" está siendo usado en algunos módulos. ¿Deseas eliminarlo de todos modos? Los módulos con este estado cambiarán al primer estado disponible.`)) {
+      return;
+    }
+    
+    // Cambiar todos los módulos que usan este estado al primer estado disponible
+    const nuevoEstadoId = estados.find((e, i) => i !== index).id;
+    data.forEach(item => {
+      if (item.estado === estadoId) {
+        item.estado = nuevoEstadoId;
+      }
+    });
+    saveData();
+  }
+  
+  estados.splice(index, 1);
+  saveEstados();
+  renderEstadosConfig();
+  renderGantt();
+}
+
+function agregarNuevoEstado() {
+  const nombre = prompt("Nombre del nuevo estado:");
+  if (nombre && nombre.trim()) {
+    const nuevoEstado = {
+      id: `estado-${Date.now()}`,
+      nombre: nombre.trim(),
+      color: '#' + Math.floor(Math.random()*16777215).toString(16)
+    };
+    estados.push(nuevoEstado);
+    saveEstados();
+    renderEstadosConfig();
+  }
+}
+
+function restaurarEstadosDefault() {
+  if (confirm("¿Estás seguro de restaurar los estados por defecto? Esto eliminará todos los estados personalizados.")) {
+    estados = getDefaultEstados();
+    
+    // Actualizar los módulos que tengan estados personalizados
+    data.forEach(item => {
+      const existeEstado = estados.find(e => e.id === item.estado);
+      if (!existeEstado) {
+        item.estado = 'done';
+      }
+    });
+    
+    saveEstados();
+    saveData();
+    renderEstadosConfig();
+    renderGantt();
+    alert("Estados restaurados a los valores por defecto.");
+  }
+}
+
+function actualizarSelectEstados() {
+  const select = document.getElementById('estado');
+  const valorActual = select.value;
+  
+  select.innerHTML = estados.map(estado => 
+    `<option value="${estado.id}">${estado.nombre}</option>`
+  ).join('');
+  
+  // Restaurar el valor seleccionado si aún existe
+  const existeValor = estados.find(e => e.id === valorActual);
+  if (existeValor) {
+    select.value = valorActual;
+  }
+}
+
+function actualizarEstilosEstados() {
+  // Crear o actualizar el style tag con los estilos dinámicos
+  let styleTag = document.getElementById('dynamic-estados-styles');
+  if (!styleTag) {
+    styleTag = document.createElement('style');
+    styleTag.id = 'dynamic-estados-styles';
+    document.head.appendChild(styleTag);
+  }
+  
+  const styles = estados.map(estado => 
+    `.${estado.id.replace(/[^a-zA-Z0-9-_]/g, '')} { background-color: ${estado.color} !important; }`
+  ).join('\n');
+  
+  styleTag.textContent = styles;
+}
+
+function renderMesesConfig() {
+  const container = document.getElementById('mesesConfigList');
+  if (!container) return;
+  
+  // Actualizar input de cantidad de sprints
+  document.getElementById('cantidadSprints').value = cantidadSprints;
+  
+  container.innerHTML = '';
+  
+  for (let i = 0; i < cantidadSprints; i++) {
+    const mesDiv = document.createElement('div');
+    mesDiv.className = 'mes-config';
+    
+    const label = document.createElement('label');
+    label.textContent = `Sprint ${i + 1}:`;
+    
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.value = meses[i] || `Mes ${i + 1}`;
+    input.placeholder = `Nombre del mes`;
+    input.addEventListener('change', function() {
+      actualizarNombreMes(i, this.value);
+    });
+    
+    const btnEliminar = document.createElement('button');
+    btnEliminar.className = 'btn-delete';
+    btnEliminar.textContent = 'Eliminar';
+    btnEliminar.addEventListener('click', function() {
+      eliminarMes(i);
+    });
+    
+    mesDiv.appendChild(label);
+    mesDiv.appendChild(input);
+    mesDiv.appendChild(btnEliminar);
+    container.appendChild(mesDiv);
+  }
+}
+
+function actualizarNombreMes(index, nuevoNombre) {
+  if (nuevoNombre.trim()) {
+    meses[index] = nuevoNombre.trim();
+    saveMeses();
+    saveAll();
+  }
+}
+
+function eliminarMes(index) {
+  if (cantidadSprints <= 1) {
+    alert("Debe haber al menos un sprint en el roadmap.");
+    return;
+  }
+  
+  // Verificar si hay módulos que usan este sprint o posteriores
+  const sprintAEliminar = index + 1;
+  const modulosAfectados = data.filter(item => {
+    const sprintFin = item.sprint + item.duracion - 1;
+    return item.sprint === sprintAEliminar || (item.sprint < sprintAEliminar && sprintFin >= sprintAEliminar);
+  });
+  
+  if (modulosAfectados.length > 0) {
+    if (!confirm(`Hay ${modulosAfectados.length} módulo(s) que usan el Sprint ${sprintAEliminar}. Al eliminarlo:\n- Los módulos en este sprint se moverán al sprint anterior\n- Las duraciones que abarquen este sprint se reducirán\n\n¿Deseas continuar?`)) {
+      return;
+    }
+    
+    // Ajustar módulos afectados
+    data.forEach(item => {
+      const sprintFin = item.sprint + item.duracion - 1;
+      
+      if (item.sprint === sprintAEliminar) {
+        // Si el módulo empieza exactamente en este sprint, moverlo al anterior
+        if (sprintAEliminar > 1) {
+          item.sprint = sprintAEliminar - 1;
+        } else {
+          // Si es el primer sprint, moverlo al siguiente (que ahora será el primero)
+          item.sprint = 1;
+        }
+        // Ajustar duración si es necesario
+        if (item.duracion > cantidadSprints - 1) {
+          item.duracion = cantidadSprints - 1;
+        }
+      } else if (item.sprint > sprintAEliminar) {
+        // Si el módulo empieza después, mover un sprint atrás
+        item.sprint = item.sprint - 1;
+      } else if (item.sprint < sprintAEliminar && sprintFin >= sprintAEliminar) {
+        // Si el módulo abarca este sprint, reducir su duración
+        item.duracion = item.duracion - 1;
+      }
+      
+      // Validar que no queden valores inválidos
+      if (item.sprint < 1) item.sprint = 1;
+      if (item.duracion < 1) item.duracion = 1;
+      if (item.sprint + item.duracion - 1 > cantidadSprints - 1) {
+        item.duracion = cantidadSprints - item.sprint;
+      }
+    });
+    
+    saveData();
+  }
+  
+  // Eliminar el mes del array
+  meses.splice(index, 1);
+  
+  // Reducir la cantidad de sprints
+  cantidadSprints--;
+  
+  // Actualizar los inputs de sprint y duración
+  document.getElementById('sprint').max = cantidadSprints;
+  document.getElementById('duracion').max = cantidadSprints;
+  
+  saveCantidadSprints();
+  saveMeses();
+  renderMesesConfig();
+  renderGantt();
+  
+  alert(`Sprint ${sprintAEliminar} eliminado. Roadmap actualizado.`);
+}
+
+function actualizarCantidadSprints() {
+  const nuevaCantidad = parseInt(document.getElementById('cantidadSprints').value);
+  
+  if (isNaN(nuevaCantidad) || nuevaCantidad < 1 || nuevaCantidad > 24) {
+    alert("La cantidad de sprints debe estar entre 1 y 24.");
+    return;
+  }
+  
+  // Si se reduce la cantidad, verificar que no haya módulos afectados
+  if (nuevaCantidad < cantidadSprints) {
+    const modulosAfectados = data.filter(item => item.sprint > nuevaCantidad || (item.sprint + item.duracion - 1) > nuevaCantidad);
+    if (modulosAfectados.length > 0) {
+      if (!confirm(`Hay ${modulosAfectados.length} módulo(s) que están fuera del nuevo rango de sprints. ¿Deseas continuar? Los módulos afectados se ajustarán automáticamente.`)) {
+        return;
+      }
+      
+      // Ajustar módulos afectados
+      data.forEach(item => {
+        if (item.sprint > nuevaCantidad) {
+          item.sprint = nuevaCantidad;
+        }
+        if (item.sprint + item.duracion - 1 > nuevaCantidad) {
+          item.duracion = nuevaCantidad - item.sprint + 1;
+        }
+      });
+      saveData();
+    }
+  }
+  
+  // Si se aumenta la cantidad, agregar nuevos meses
+  if (nuevaCantidad > cantidadSprints) {
+    const mesesDefault = getDefaultMeses();
+    for (let i = meses.length; i < nuevaCantidad; i++) {
+      meses[i] = mesesDefault[i % mesesDefault.length];
+    }
+  }
+  
+  cantidadSprints = nuevaCantidad;
+  
+  // Actualizar los inputs de sprint y duración
+  document.getElementById('sprint').max = cantidadSprints;
+  document.getElementById('duracion').max = cantidadSprints;
+  
+  saveCantidadSprints();
+  saveMeses();
+  renderMesesConfig();
+  renderGantt();
+  alert(`Cantidad de sprints actualizada a ${cantidadSprints}.`);
+}
+
+function restaurarMesesDefault() {
+  if (confirm("¿Estás seguro de restaurar los meses por defecto?")) {
+    meses = getDefaultMeses();
+    saveMeses();
+    renderMesesConfig();
+    alert("Meses restaurados a los valores por defecto.");
+  }
+}
+
+function toggleTheme() {
+  const body = document.body;
+  const themeToggle = document.getElementById('themeToggle');
+  
+  body.classList.toggle('dark-mode');
+  
+  if (body.classList.contains('dark-mode')) {
+    themeToggle.textContent = '☀️';
+    localStorage.setItem(THEME_KEY, 'dark');
+  } else {
+    themeToggle.textContent = '🌙';
+    localStorage.setItem(THEME_KEY, 'light');
+  }
+}
+
+function loadTheme() {
+  const savedTheme = localStorage.getItem(THEME_KEY);
+  const themeToggle = document.getElementById('themeToggle');
+  
+  if (savedTheme === 'dark') {
+    document.body.classList.add('dark-mode');
+    themeToggle.textContent = '☀️';
+  } else {
+    themeToggle.textContent = '🌙';
+  }
+}
+
+// Event Listeners
+document.getElementById("btnAgregar").addEventListener('click', agregarFila);
+document.getElementById("btnEliminar").addEventListener('click', eliminarFila);
+document.getElementById("btnCancelar").addEventListener('click', cancelarEdicion);
+document.getElementById("btnToggleSprint").addEventListener('click', () => toggleColumn('sprint'));
+document.getElementById("btnToggleDuracion").addEventListener('click', () => toggleColumn('duracion'));
+document.getElementById("headerSprint").addEventListener('click', () => toggleColumn('sprint'));
+document.getElementById("headerDuracion").addEventListener('click', () => toggleColumn('duracion'));
+
+// Inicializar
+loadData();
+loadColumnState();
+loadEstados();
+loadMeses();
+loadCantidadSprints();
+loadTheme();
+fetch('/get')
+  .then(r => r.json())
+  .then(server => {
+    if(server.data) data = server.data;
+    if(server.estados) estados = server.estados;
+    if(server.meses) meses = server.meses;
+    if(server.cantidadSprints) cantidadSprints = server.cantidadSprints;
+
+    saveData();
+    saveEstados();
+    saveMeses();
+    saveCantidadSprints();
+
+    renderGantt();
+    actualizarSelectEstados();
+    actualizarEstilosEstados();
+    actualizarLeyenda();
+  });
+</script>
+
+</body>
+</html>
+
+<script>
+
+function saveAll() {
+    const fullData = {
+        data: data,
+        estados: estados,
+        meses: meses,
+        cantidadSprints: cantidadSprints
+    };
+
+    fetch('/save', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(fullData)
+    })
+    .then(r => r.json())
+    .then(resp => {
+        if (resp.status === "ok") {
+            console.log("✅ Guardado en servidor");
+        } else {
+            alert("⚠️ Error al guardar en servidor");
+        }
+    })
+    .catch(() => alert("⚠️ Error al guardar en servidor"));
+}
+
+</script>
+
+
+
+<script>
+
+function saveAll() {
+    const fullData = {
+        data: data,
+        estados: estados,
+        meses: meses,
+        cantidadSprints: cantidadSprints
+    };
+
+    fetch('/save', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(fullData)
+    })
+    .then(r => r.json())
+    .then(resp => {
+        if (resp.status === "ok") {
+            console.log("✅ Guardado en servidor");
+        } else {
+            alert("⚠️ Error al guardar en servidor");
+        }
+    })
+    .catch(() => alert("⚠️ Error al guardar en servidor"));
+}
+
+function loadAll() {
+    fetch('/load')
+        .then(r => r.json())
+        .then(d => {
+            if (!d) return;
+            data = d.data || [];
+            estados = d.estados || [];
+            meses = d.meses || [];
+            cantidadSprints = d.cantidadSprints || cantidadSprints;
+            renderGantt();
+        });
+}
+
+loadAll();
+
+</script>
+</body>
+</html>
+
