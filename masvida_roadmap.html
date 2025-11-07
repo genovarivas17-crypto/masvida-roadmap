@@ -634,7 +634,6 @@ function getDefaultData() {
 
 function saveData() {
   try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
   } catch (e) {
     console.error("Error saving data:", e);
     alert("Error al guardar los datos");
@@ -707,8 +706,6 @@ function loadEstados() {
 }
 
 function saveEstados() {
-  localStorage.setItem("estados", JSON.stringify(estados));
-
   fetch('/save_states', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -721,6 +718,7 @@ function saveEstados() {
     }
   });
 }
+
 
 
 function getDefaultMeses() {
@@ -746,7 +744,6 @@ function loadMeses() {
 
 function saveMeses() {
   try {
-    localStorage.setItem(MESES_KEY, JSON.stringify(meses));
     renderGantt();
     saveAll();
   } catch (e) {
@@ -771,7 +768,6 @@ function loadCantidadSprints() {
 
 function saveCantidadSprints() {
   try {
-    localStorage.setItem(SPRINTS_KEY, cantidadSprints.toString());
   } catch (e) {
     console.error("Error saving sprints:", e);
   }
@@ -1593,28 +1589,30 @@ document.getElementById("headerDuracion").addEventListener('click', () => toggle
 // Inicializar
 loadData();
 loadColumnState();
-loadEstados();
+async function cargarEstadosDesdeServidor() {
+  try {
+    const resp = await fetch("/load");
+    const serverData = await resp.json();
+    estados = serverData.estados || getDefaultEstados();
+  } catch {
+    estados = getDefaultEstados();
+  }
+}
+
+await cargarEstadosDesdeServidor();
+
+await cargarEstadosDesdeServidor();  // <--- Ahora la verdad viene del servidor
 loadMeses();
 loadCantidadSprints();
 loadTheme();
-fetch('/get')
-  .then(r => r.json())
-  .then(server => {
-    if(server.data) data = server.data;
-    if(server.estados) estados = server.estados;
-    if(server.meses) meses = server.meses;
-    if(server.cantidadSprints) cantidadSprints = server.cantidadSprints;
+await loadAll();                      // <-- importante: esperar datos antes de dibujar
 
-    saveData();
-    saveEstados();
-    saveMeses();
-    saveCantidadSprints();
+actualizarSelectEstados();
+actualizarEstilosEstados();
+actualizarLeyenda();
+renderGantt();                        // <-- dibuja después de actualizar estilos
 
-    renderGantt();
-    actualizarSelectEstados();
-    actualizarEstilosEstados();
-    actualizarLeyenda();
-  });
+
 </script>
 
 </body>
@@ -1685,10 +1683,6 @@ async function loadAll() {
       estados = serverData.estados || [];
       meses = serverData.meses || [];
 
-      // Guardar copia también en localStorage para acelerar carga
-      localStorage.setItem("data", JSON.stringify(data));
-      localStorage.setItem("estados", JSON.stringify(estados));
-      localStorage.setItem("meses", JSON.stringify(meses));
 
       renderGantt();
    } catch (err) {
