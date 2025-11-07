@@ -633,7 +633,8 @@
 const THEME_KEY = 'ganttTheme';
 
 let data = [];
-let collapsedColumns = { sprint: false, duracion: false };
+const COLUMNS_STATE_KEY = 'ganttColumnsState';
+let collapsedColumns = loadColumnState();
 let moduloEditando = null;
 let estados = [];
 let meses = [];
@@ -798,8 +799,18 @@ function applyColumnState() {
   }
 }
 
+function loadColumnState() {
+  const savedState = localStorage.getItem(COLUMNS_STATE_KEY);
+  return savedState ? JSON.parse(savedState) : { sprint: false, duracion: false };
+}
+
+function saveColumnState() {
+  localStorage.setItem(COLUMNS_STATE_KEY, JSON.stringify(collapsedColumns));
+}
+
 function toggleColumn(columnName) {
   collapsedColumns[columnName] = !collapsedColumns[columnName];
+  saveColumnState();
   applyColumnState();
 }
 
@@ -1549,10 +1560,14 @@ async function init() {
     console.warn('Using default data due to server error');
   }
   
+  // Aplicar el estado guardado de las columnas
+  collapsedColumns = loadColumnState();
+  
   actualizarSelectEstados();
   actualizarEstilosEstados();
   actualizarLeyenda();
   renderGantt();
+  applyColumnState();
 }
 
 init();
